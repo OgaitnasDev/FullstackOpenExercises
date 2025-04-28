@@ -23,10 +23,7 @@ const Part = ({name, exercises}) =>{
 }
 
 const Total = ({course}) => {
-  let total = 0
-  course.parts.forEach((x) => {
-    total += x.exercises
-  })
+const total = course.parts.reduce((accumulator, currentValue) => accumulator + currentValue.exercises, 0)
 
   return(
     <div>
