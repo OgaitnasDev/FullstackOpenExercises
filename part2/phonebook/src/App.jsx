@@ -8,16 +8,22 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-		const newPerson = {
-			name: newName
-		}
-		setPersons(persons.concat(newPerson))
+    
+    if(!persons.map(p => p.name).includes(newName)){
+      const newPerson = {
+        name: newName
+      }
+      setPersons(persons.concat(newPerson))
+    } 
+    else {
+      alert(`${newName} is already added to phonebook`)
+      console.log("Person already exists")
+    }
+    setNewName('')
   }
 
 	const handleOnChange = (event) => {
 		setNewName(event.target.value)
-		
-		console.log('hello', newName)
 	}
 
   return (
@@ -34,7 +40,7 @@ const App = () => {
       <h2>Numbers</h2>
 			<table>
 				<tbody>
-					{persons.map( (p, index) => <tr key={p.name + String(index)}><td>{p.name}</td></tr>)}
+					{persons.map( (p) => <tr key={p.name}><td>{p.name}</td></tr>)}
 				</tbody>
 			</table>
       
