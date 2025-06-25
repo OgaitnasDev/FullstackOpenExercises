@@ -20,8 +20,9 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+    const foundPerson = persons.find(p => p.name === newName)
 
-    if(!persons.map(p => p.name).includes(newName)){
+    if(foundPerson === undefined){
       const newPerson = {
         name: newName,
         number: newNumber
@@ -31,7 +32,9 @@ const App = () => {
       
     } 
     else {
-      alert(`${newName} is already added to phonebook`);
+      if(confirm(`${foundPerson.name} is already on the phonebook. Replace the old number with a new one?`)){
+        updateNumber(foundPerson, newNumber);
+      }
     }
     setNewName('')
     setNewNumber('')
@@ -40,6 +43,17 @@ const App = () => {
   const removePerson = (id, name) =>{
     if(window.confirm(`Delete ${name}?`))
       personService.remove(id).then(response => setPersons(persons.filter(p => p.id !== response.id)));
+  }
+
+  const updateNumber = (person, newNumber) => {
+    const changedPerson = { ...person, number: newNumber};
+    personService.update(person.id, changedPerson)
+    .then(returnedPerson => {
+      setPersons(persons.map(p => p.id === person.id ? returnedPerson : p))
+    }).catch(error => {
+      console.log(`${person.name} couldn't be found`);
+      setPersons(persons.filter(p => p.id !== person.id));
+    })
   }
 
 	const handleNameOnChange = (event) => {
