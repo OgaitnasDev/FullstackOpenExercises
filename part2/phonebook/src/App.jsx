@@ -3,6 +3,7 @@ import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 import personService from './services/personService'
 
 const App = () => {
@@ -10,6 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorStyle, setErrorStyle] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll()
@@ -28,7 +31,15 @@ const App = () => {
         number: newNumber
       }
       personService.create(newPerson)
-        .then(returnedPerson => setPersons(persons.concat(returnedPerson)));
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setErrorMessage(`Added ${newName}`);
+          setErrorStyle(false);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        });
+      
       
     } 
     else {
@@ -42,7 +53,19 @@ const App = () => {
 
   const removePerson = (id, name) =>{
     if(window.confirm(`Delete ${name}?`))
-      personService.remove(id).then(response => setPersons(persons.filter(p => p.id !== response.id)));
+      personService.remove(id).then(response => {
+      setPersons(persons.filter(p => p.id !== response.id))
+      setErrorMessage(`Removed ${name}`);
+      setErrorStyle(false);
+    })
+    .catch(error => {
+      setErrorMessage(`${name} was already removed!`);
+      setErrorStyle(true);
+      setPersons(persons.filter(p => p.id !== id))
+    });
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
   }
 
   const updateNumber = (person, newNumber) => {
@@ -50,10 +73,17 @@ const App = () => {
     personService.update(person.id, changedPerson)
     .then(returnedPerson => {
       setPersons(persons.map(p => p.id === person.id ? returnedPerson : p))
+      setErrorMessage(`${returnedPerson.name}'s number changed`);
+      setErrorStyle(false);
     }).catch(error => {
       console.log(`${person.name} couldn't be found`);
       setPersons(persons.filter(p => p.id !== person.id));
+      setErrorMessage(`${person.name} couldn't be found`);
+      setErrorStyle(true);
     })
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000)
   }
 
 	const handleNameOnChange = (event) => {
@@ -71,6 +101,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} error={errorStyle}/>
       <Filter value={filter} onChange={handleFilterOnChange}/>
       <PersonForm onSubmit={addPerson} nameValue={newName} nameOnChange={handleNameOnChange} numberValue={newNumber} numberOnChange={handleNumberOnChange} />
       <h2>Numbers</h2>
