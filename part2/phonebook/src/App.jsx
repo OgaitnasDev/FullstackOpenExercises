@@ -59,7 +59,7 @@ const App = () => {
       setErrorStyle(false);
     })
     .catch(error => {
-      setErrorMessage(`${name} was already removed!`);
+      setErrorMessage(`${name} information was already removed!`);
       setErrorStyle(true);
       setPersons(persons.filter(p => p.id !== id))
     });
