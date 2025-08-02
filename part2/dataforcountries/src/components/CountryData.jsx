@@ -1,5 +1,5 @@
 const CountryData = ({country}) =>{
-    console.log(country);
+    if(!country) return;
 
     const flagStyle = {
         fontSize: '30em'

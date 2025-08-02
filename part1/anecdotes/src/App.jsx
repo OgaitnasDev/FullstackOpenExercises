@@ -48,12 +48,12 @@ const App = () => {
 
   return (
     <div>
-			<h1>Anecdote of the day</h1>
-      <p>{anecdotes[selected]}</p>
-			<p>has {votes[selected]} votes</p>
-			<button onClick={voteButtonHandler}>vote</button>
-			<button onClick={randomAnecdote}>next anecdote</button>
-			<AnecdoteWithMostVotes anecdotes={anecdotes} votes={votes}/>
+		<h1>Anecdote of the day</h1>
+		<p>{anecdotes[selected]}</p>
+		<p>has {votes[selected]} votes</p>
+		<button onClick={voteButtonHandler}>vote</button>
+		<button onClick={randomAnecdote}>next anecdote</button>
+		<AnecdoteWithMostVotes anecdotes={anecdotes} votes={votes}/>
     </div>
   )
 }
