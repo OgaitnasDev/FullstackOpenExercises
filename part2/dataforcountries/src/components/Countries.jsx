@@ -23,7 +23,7 @@ const Countries = (props) => {
     if(props.selectedCountry){
         return(
             <div>
-                <CountryData country={props.selectedCountry} />
+                <CountryData country={props.selectedCountry} weather={props.weather} icon={props.icon}/>
             </div>
         )
     }
@@ -39,11 +39,8 @@ const Countries = (props) => {
     }
 
     if(foundCountries.length === 1){
-        return(
-            <div>
-                <CountryData country={foundCountries[0]}/>
-            </div>
-        )
+        props.selectCountry(foundCountries[0]);
+        return;
     }
 
     return(
